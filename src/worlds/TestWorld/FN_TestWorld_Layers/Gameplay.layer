@@ -1,0 +1,24 @@
+FN_CapturePointEntity FN_CapturePoint {
+ components {
+  RplComponent "{5EA74235752F0025}" {
+  }
+ }
+ coords 5.067 0 5.253
+ TriggerShapeType Sphere
+ SphereRadius 3
+ DrawShape 1
+ TriggerActivationType "All changes"
+ PeriodicQueries 1
+ ClassesFilter {
+  "SCR_ChimeraCharacter"
+ }
+ m_CapturePointConfig FN_CapturePointManagerConfig "{5EA742357E99B395}" : "{5C4566B4F8A3FB1C}Configs/FN_CapturePointManager.conf" {
+ }
+ m_iCapturePointCap 10
+}
+SCR_SpawnPoint FN_SpawnPointUS : "{99C0F12FDFB44D1E}Prefabs/FN_SpawnPoint_US.et" {
+ coords 15 0 11
+}
+SCR_SpawnPoint FN_SpawnPointUSSR : "{A6F9ED26823754A8}Prefabs/FN_SpawnPointUSSR.et" {
+ coords 5.807 0 12.046
+}

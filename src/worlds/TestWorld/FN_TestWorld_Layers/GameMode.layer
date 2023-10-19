@@ -1,0 +1,15 @@
+SCR_MapEntity FN_MapEntity : "{7E7D72FF1C133B9B}Prefabs/FN_MapEntity.et" {
+}
+ScriptedChatEntity FN_Chat : "{39DDD6A1663D3B14}Prefabs/FN_ChatEntity.et" {
+ coords 0 0 0
+}
+SCR_BaseGameMode FN_GameMode : "{78F4A25AB34701CC}Prefabs/FN_GameMode.et" {
+ coords 0 0 0
+}
+RadioManagerEntity FN_RadioManager : "{C0E59579E7147DC6}Prefabs/FN_RadioManager.et" {
+ coords 0 0 0
+}
+SCR_FactionManager FN_FactionManager : "{DFB253FBB8255961}Prefabs/FN_FactionManager.et" {
+}
+SCR_LoadoutManager FN_LoadoutManager : "{33569EB05E166E8F}Prefabs/FN_LoadoutManager.et" {
+}

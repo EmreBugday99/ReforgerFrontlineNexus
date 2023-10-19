@@ -1,0 +1,15 @@
+MetaFileClass {
+ Name "{A6F9ED26823754A8}Prefabs/MP/Spawning/FN_SpawnPointUSSR.et"
+ Configurations {
+  EntityTemplateResourceClass PC {
+  }
+  EntityTemplateResourceClass XBOX_ONE : PC {
+  }
+  EntityTemplateResourceClass XBOX_SERIES : PC {
+  }
+  EntityTemplateResourceClass PS4 : PC {
+  }
+  EntityTemplateResourceClass HEADLESS : PC {
+  }
+ }
+}

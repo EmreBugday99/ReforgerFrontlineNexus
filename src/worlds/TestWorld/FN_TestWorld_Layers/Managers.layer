@@ -1,0 +1,80 @@
+GenericWorldPPEffect PostProcess {
+ coords 0 0 0
+ Priority 0
+ Profile 4
+ {
+  $grp GenericWorldPPEffect {
+   PPAA {
+    Priority 17
+    Profile 6
+   }
+   RainEffect {
+    coords 0 0 0
+    Priority 3
+    Material "{FA4DE95A7276143D}Common/Postprocess/rain.emat"
+   }
+   HDR {
+    Priority 16
+    Profile 2
+   }
+   SSDO {
+    Priority 14
+    Profile 3
+   }
+   HBAO {
+    Priority 15
+    Profile 0
+   }
+   UnderWater {
+    Priority 2
+    Profile 5
+   }
+   GodRays {
+    Priority 1
+    Profile 1
+   }
+  }
+ }
+}
+GenericWorldFogEntity FogHaze {
+ coords 0 0 0
+ FakeDistFog 1
+ HeightDensity 0.94
+ DistanceDensity 0.362
+ HeightOffset 0
+ Color 0.5 0.5 0.5 0
+ ColorBack 0.4 0.4 0.4 0
+}
+GenericWorldLightEntity Lightning {
+ coords 0 0 0
+ DirectLightLV 15
+ DirectLightColor 1 1 1 0
+ IndirectLightLV 14
+ IndirectLightColor 1 1 1 0
+ ShadowFactor 1
+ PenumbraMultiplier 50
+ TargetEV 1.7
+ TargetEVLimitBright 1
+ TargetEVLimitDark 0
+ ManualHDRBrightnessLV 13
+}
+SCR_CameraManager CameraManager : "{33F9FD881E3700CC}Prefabs/World/Game/SCR_CameraManager.et" {
+}
+TimeAndWeatherManagerEntity TimeAndWeatherManager : "{A3BAF78F6F03315B}Prefabs/World/Game/TimeAndWeatherManager.et" {
+ "Internal variant transition" 0
+ "Internal subvariant 0" 0
+ "Internal subvariant 1" 0
+}
+ProjectileSoundsManager ProjectileSoundManager : "{B4DA8B0024536625}Prefabs/World/Game/ProjectileSoundsManager.et" {
+}
+EnvironmentProbeEntity MainProbe {
+ Type "Global placed"
+ TopColorEV 0.5
+ TopAngleMax 8
+ TopAngleMin 0
+ BottomColorEV -0.5
+ BottomAngleMax -5
+ BottomAngleMin 0
+}
+SCR_MPDestructionManager DestructionManager {
+}

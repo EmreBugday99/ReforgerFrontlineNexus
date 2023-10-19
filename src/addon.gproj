@@ -1,7 +1,7 @@
 GameProject {
- ID "ReforgerFrontlineNexus"
+ ID "FrontlineNexus"
  GUID "5EA72C37E8E3FF7C"
- TITLE "ReforgerFrontlineNexus"
+ TITLE "FrontlineNexus"
  Dependencies {
   "58D0FB3206B6F859"
  }

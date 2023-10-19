@@ -1,0 +1,9 @@
+SCR_LoadoutManager : "{AA4E7419A1FF65B0}Prefabs/MP/Managers/Loadouts/LoadoutManager_Base.et" {
+ ID "56B2B47708C4F23A"
+ m_aPlayerLoadouts {
+  SCR_FactionPlayerLoadout "{5EA73A0FB466EAA7}" : "{7C7C65FD583E6612}Configs/Loadouts/US/Loadout_US_Rifleman.conf" {
+  }
+  SCR_FactionPlayerLoadout "{5EA73A0FB6E4DF19}" : "{5F9034642E99437D}Configs/Loadouts/USSR/Loadout_USSR_Rifleman.conf" {
+  }
+ }
+}

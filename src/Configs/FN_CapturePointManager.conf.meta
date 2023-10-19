@@ -1,0 +1,15 @@
+MetaFileClass {
+ Name "{5C4566B4F8A3FB1C}Configs/FN_CapturePointManager.conf"
+ Configurations {
+  CONFResourceClass PC {
+  }
+  CONFResourceClass XBOX_ONE : PC {
+  }
+  CONFResourceClass XBOX_SERIES : PC {
+  }
+  CONFResourceClass PS4 : PC {
+  }
+  CONFResourceClass HEADLESS : PC {
+  }
+ }
+}

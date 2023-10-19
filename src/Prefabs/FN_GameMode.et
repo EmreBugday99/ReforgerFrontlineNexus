@@ -1,0 +1,14 @@
+SCR_BaseGameMode : "{0F307326459A1395}Prefabs/MP/Modes/GameMode_Base.et" {
+ ID "56B2B479C6B96951"
+ components {
+  SCR_RespawnSystemComponent "{56B2B4793051E7C9}" {
+   components {
+    SCR_SpawnPointSpawnHandlerComponent "{5CD2D126957998DF}" {
+     m_bDeletePreviousControlledEntity 1
+    }
+   }
+   m_SpawnLogic SCR_MenuSpawnLogic "{5EA73A0E5889D228}" {
+   }
+  }
+ }
+}

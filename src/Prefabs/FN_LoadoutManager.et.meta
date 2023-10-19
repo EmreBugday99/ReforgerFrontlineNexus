@@ -1,0 +1,15 @@
+MetaFileClass {
+ Name "{33569EB05E166E8F}Prefabs/MP/Managers/Loadouts/FN_LoadoutManager.et"
+ Configurations {
+  EntityTemplateResourceClass PC {
+  }
+  EntityTemplateResourceClass XBOX_ONE : PC {
+  }
+  EntityTemplateResourceClass XBOX_SERIES : PC {
+  }
+  EntityTemplateResourceClass PS4 : PC {
+  }
+  EntityTemplateResourceClass HEADLESS : PC {
+  }
+ }
+}
