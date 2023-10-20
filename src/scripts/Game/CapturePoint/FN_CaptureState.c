@@ -4,7 +4,7 @@ typedef ScriptInvokerBase<OnCaptureStateChangeMethod> OnCaptureStateChange;
 
 class FN_CaptureState
 {
-	protected Faction m_CapturingFaction;
+	protected Faction m_CapturingFaction; // Must not be null at all times!
 	protected int m_iCapturePoints;
 	protected ref OnCaptureStateChange m_OnCapturePointChange;
 
@@ -59,6 +59,8 @@ class FN_CaptureState
 
 		if (m_OnCapturePointChange)
 			m_OnCapturePointChange.Invoke(this);
+		
+		Print("New Capture Point For " + GetFaction().GetFactionName() + ": " + GetCapturePoints());
 	}
 
 	//------------------------------------------------------------------------------------------------

@@ -15,6 +15,14 @@ FN_CapturePointEntity FN_CapturePoint {
  m_CapturePointConfig FN_CapturePointManagerConfig "{5EA742357E99B395}" : "{5C4566B4F8A3FB1C}Configs/FN_CapturePointManager.conf" {
  }
  m_iCapturePointCap 10
+ m_aHandlers {
+  FN_CPHandler_WinnerPointReducer "{5EA9470D3F31BC6A}" {
+  }
+  FN_CPHandler_WinnerPointIncreaser "{5EA9470D31432942}" {
+  }
+  FN_CPHandler_NeutralizeHolder "{5EA9470D3035ED49}" {
+  }
+ }
 }
 SCR_SpawnPoint FN_SpawnPointUS : "{99C0F12FDFB44D1E}Prefabs/FN_SpawnPoint_US.et" {
  coords 15 0 11
