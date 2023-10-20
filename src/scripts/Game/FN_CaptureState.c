@@ -42,7 +42,7 @@ class FN_CaptureState
 
 		if (m_OnCapturePointChange)
 			m_OnCapturePointChange.Invoke(this);
-		
+
 		Print("New Capture Point For " + GetFaction().GetFactionName() + ": " + GetCapturePoints());
 	}
 

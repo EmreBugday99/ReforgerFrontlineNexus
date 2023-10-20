@@ -23,7 +23,7 @@ class FN_CapturePointEntity : BaseGameTriggerEntity
 			if (captureState.GetFaction().GetFactionKey() == faction)
 				return captureState;
 		}
-		
+
 		return null;
 	}
 
@@ -46,17 +46,33 @@ class FN_CapturePointEntity : BaseGameTriggerEntity
 	}
 
 	//------------------------------------------------------------------------------------------------
+	void OnCharacterDeadWithinZone(SCR_CharacterControllerComponent characterController, IEntity killerEntity, notnull Instigator killer)
+	{
+		m_aCharactersInsideZone.RemoveItem(characterController.GetCharacter());
+	}
+
+	//------------------------------------------------------------------------------------------------
 	protected void OnCharacterEnteredZone(notnull SCR_ChimeraCharacter enteredCharacter)
 	{
-		m_aCharactersInsideZone.Insert(enteredCharacter);
+		SCR_CharacterControllerComponent characterController = SCR_CharacterControllerComponent.Cast(enteredCharacter.GetCharacterController());
+		if (!characterController)
+			return;
 
+		characterController.GetOnPlayerDeathWithParam().Insert(OnCharacterDeadWithinZone);
 		CreateCaptureStateIfNotExistent(enteredCharacter.GetFactionKey());
+		m_aCharactersInsideZone.Insert(enteredCharacter);
 	}
 
 	//------------------------------------------------------------------------------------------------
 	protected void OnCharacterLeaveZone(notnull SCR_ChimeraCharacter leftCharacter)
 	{
 		m_aCharactersInsideZone.RemoveItem(leftCharacter);
+
+		SCR_CharacterControllerComponent characterController = SCR_CharacterControllerComponent.Cast(leftCharacter.GetCharacterController());
+		if (!characterController)
+			return;
+
+		characterController.GetOnPlayerDeathWithParam().Remove(OnCharacterDeadWithinZone);
 	}
 
 	//------------------------------------------------------------------------------------------------
@@ -64,10 +80,14 @@ class FN_CapturePointEntity : BaseGameTriggerEntity
 	{
 		int perCharacterPointGain = m_CapturePointConfig.GetPerCharacterPointGain();
 
-		foreach (SCR_ChimeraCharacter character : m_aCharactersInsideZone)
+		for (int i = m_aCharactersInsideZone.Count() - 1; i >= 0; i--)
 		{
-			if (!character)
+			SCR_ChimeraCharacter character = m_aCharactersInsideZone[i];
+			if (!character) // If the character was deleted in between the previous tick, remove it from the array.
+			{
+				m_aCharactersInsideZone.RemoveOrdered(i);
 				continue;
+			}
 
 			string factionKey = character.GetFactionKey();
 			if (factionKey == string.Empty)
@@ -90,7 +110,7 @@ class FN_CapturePointEntity : BaseGameTriggerEntity
 			Print("[FrontlineNexus] Non Character Entity Detected On Capture Zone! Check Trigger Filters! " + this, LogLevel.ERROR);
 			return;
 		}
-		
+
 		if (m_aCharactersInsideZone.Contains(enteredCharacter))
 			return;
 
@@ -106,7 +126,7 @@ class FN_CapturePointEntity : BaseGameTriggerEntity
 			Print("[FrontlineNexus] Non Character Entity Detected On Capture Zone! Check Trigger Filters! " + this, LogLevel.ERROR);
 			return;
 		}
-		
+
 		if (!m_aCharactersInsideZone.Contains(leftCharacter))
 			return;
 
@@ -121,7 +141,7 @@ class FN_CapturePointEntity : BaseGameTriggerEntity
 			Print("[FrontlineNexus] NULL Capture Point Config Detected! " + this, LogLevel.ERROR);
 			return;
 		}
-		
+
 		RplComponent rpl = RplComponent.Cast(FindComponent(RplComponent));
 		if (!rpl)
 			Print("[FrontlineNexus] Capture Point Entity is missing a Replication Component! " + this, LogLevel.ERROR);
