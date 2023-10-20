@@ -15,6 +15,17 @@ class FN_CapturePointEntity : BaseGameTriggerEntity
 
 	protected ref array<ref FN_CaptureState> m_aCaptureStates = new array<ref FN_CaptureState>();
 
+	[Attribute()]
+	protected ref array<ref FN_CapturePointHandler> m_aHandlers;
+
+	protected Faction m_HoldingFaction;
+
+	//------------------------------------------------------------------------------------------------
+	int GetCapturePointCap()
+	{
+		return m_iCapturePointCap;
+	}
+
 	//------------------------------------------------------------------------------------------------
 	FN_CaptureState GetCaptureStateByFaction(FactionKey faction)
 	{
@@ -28,9 +39,64 @@ class FN_CapturePointEntity : BaseGameTriggerEntity
 	}
 
 	//------------------------------------------------------------------------------------------------
+	Faction GetHoldingFaction()
+	{
+		return m_HoldingFaction;
+	}
+
+	//------------------------------------------------------------------------------------------------
+	Faction GetFactionWithHighestCharactersInside()
+	{
+		Faction highestCharacterFaction;
+		int characterCountOfFaction;
+
+		foreach (FN_CaptureState captureState : m_aCaptureStates)
+		{
+			Faction captureStateFaction = captureState.GetFaction();
+
+			int amountOfCharacters = GetAmountOfCharactersInsideBasedOnFaction(captureStateFaction.GetFactionKey());
+			if (amountOfCharacters > characterCountOfFaction)
+			{
+				highestCharacterFaction = captureStateFaction;
+				characterCountOfFaction = amountOfCharacters;
+			}
+			else if (amountOfCharacters == characterCountOfFaction) // If both factions have same amount of characters, it's considered even.
+				highestCharacterFaction = null;
+		}
+
+		return highestCharacterFaction;
+	}
+
+	//------------------------------------------------------------------------------------------------
+	int GetAmountOfCharactersInsideBasedOnFaction(FactionKey factionKey)
+	{
+		if (SCR_StringHelper.IsEmptyOrWhiteSpace(factionKey))
+			return 0;
+
+		int amountOfCharacters;
+		foreach (SCR_ChimeraCharacter character : m_aCharactersInsideZone)
+		{
+			if (!character)
+				continue;
+
+			if (character.GetFactionKey() == factionKey)
+				amountOfCharacters++;
+		}
+
+		return amountOfCharacters;
+	}
+
+	//------------------------------------------------------------------------------------------------
+	void SetHoldingFaction(Faction holdingFaction)
+	{
+		m_HoldingFaction = holdingFaction;
+		Print("New Faction: " + holdingFaction);
+	}
+
+	//------------------------------------------------------------------------------------------------
 	protected void CreateCaptureStateIfNotExistent(FactionKey factionKey)
 	{
-		if (factionKey == string.Empty)
+		if (SCR_StringHelper.IsEmptyOrWhiteSpace(factionKey))
 			return;
 
 		FN_CaptureState captureState = GetCaptureStateByFaction(factionKey);
@@ -43,12 +109,26 @@ class FN_CapturePointEntity : BaseGameTriggerEntity
 
 		captureState = new FN_CaptureState(faction);
 		m_aCaptureStates.Insert(captureState);
+
+		foreach (FN_CapturePointHandler handler : m_aHandlers)
+		{
+			handler.OnNewCaptureStateCreated(captureState);
+		}
 	}
 
 	//------------------------------------------------------------------------------------------------
 	void OnCharacterDeadWithinZone(SCR_CharacterControllerComponent characterController, IEntity killerEntity, notnull Instigator killer)
 	{
+		SCR_ChimeraCharacter character = characterController.GetCharacter();
+		if (!character)
+			return;
+
 		m_aCharactersInsideZone.RemoveItem(characterController.GetCharacter());
+
+		foreach (FN_CapturePointHandler handler : m_aHandlers)
+		{
+			handler.OnCharacterDeathInsideCaptureZone(character);
+		}
 	}
 
 	//------------------------------------------------------------------------------------------------
@@ -61,6 +141,11 @@ class FN_CapturePointEntity : BaseGameTriggerEntity
 		characterController.GetOnPlayerDeathWithParam().Insert(OnCharacterDeadWithinZone);
 		CreateCaptureStateIfNotExistent(enteredCharacter.GetFactionKey());
 		m_aCharactersInsideZone.Insert(enteredCharacter);
+
+		foreach (FN_CapturePointHandler handler : m_aHandlers)
+		{
+			handler.OnCharacterEnterCaptureZone(enteredCharacter);
+		}
 	}
 
 	//------------------------------------------------------------------------------------------------
@@ -73,13 +158,15 @@ class FN_CapturePointEntity : BaseGameTriggerEntity
 			return;
 
 		characterController.GetOnPlayerDeathWithParam().Remove(OnCharacterDeadWithinZone);
+
+		foreach (FN_CapturePointHandler handler : m_aHandlers)
+		{
+			handler.OnCharacterLeaveCaptureZone(leftCharacter);
+		}
 	}
 
-	//------------------------------------------------------------------------------------------------
-	void OnCapturePointTimerTick()
+	protected void OptimizeMemoryUtilization()
 	{
-		int perCharacterPointGain = m_CapturePointConfig.GetPerCharacterPointGain();
-
 		for (int i = m_aCharactersInsideZone.Count() - 1; i >= 0; i--)
 		{
 			SCR_ChimeraCharacter character = m_aCharactersInsideZone[i];
@@ -88,16 +175,19 @@ class FN_CapturePointEntity : BaseGameTriggerEntity
 				m_aCharactersInsideZone.RemoveOrdered(i);
 				continue;
 			}
+		}
 
-			string factionKey = character.GetFactionKey();
-			if (factionKey == string.Empty)
-				continue;
+		m_aCharactersInsideZone.Compact();
+	}
 
-			FN_CaptureState captureState = GetCaptureStateByFaction(factionKey);
-			if (!captureState)
-				continue;
+	//------------------------------------------------------------------------------------------------
+	void OnCapturePointTimerTick()
+	{
+		OptimizeMemoryUtilization();
 
-			captureState.AddCapturePoints(perCharacterPointGain);
+		foreach (FN_CapturePointHandler handler : m_aHandlers)
+		{
+			handler.OnCaptureTimerTick();
 		}
 	}
 
@@ -147,5 +237,10 @@ class FN_CapturePointEntity : BaseGameTriggerEntity
 			Print("[FrontlineNexus] Capture Point Entity is missing a Replication Component! " + this, LogLevel.ERROR);
 
 		m_CapturePointConfig.AddCapturePoint(this);
+
+		foreach (FN_CapturePointHandler handler : m_aHandlers)
+		{
+			handler.Initialize(this);
+		}
 	}
 }
